@@ -23,7 +23,6 @@ In **Simon Says Multiplayer**, players compete in a fast-paced memory challenge:
 
 ## Screenshots
 
-*(Replace these placeholders with actual screenshots of your game before presenting!)*
 
 <div align="center">
   <img src="assets/display.png" alt="Big Screen Display View" width="800" />
