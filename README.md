@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>Simon Says Multiplayer</h1>
+  <h1>Simon Says </h1>
   <p>A real-time, massively multiplayer take on the classic memory game, built for college fests and large gatherings.</p>
 
   <p>
