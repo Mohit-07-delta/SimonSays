@@ -45,6 +45,14 @@
 - **Audio & Visual Polish:** Integrated sound effects for tapping, eliminations, and victories, alongside an HTML5 Canvas confetti celebration!
 - **Simulated Load Testing:** Comes with a built-in `simulate.js` script to instantly test the server with 30 AI bots.
 
+## ⚡ Why Run Locally (LAN) vs Cloud?
+
+This game was specifically engineered to be played on a local network (using a dedicated WiFi router without internet) for college fests and large events. Here's why:
+
+- **Zero Lag (Latency):** Simon Says is a timing-based game. Cloud deployments (like Heroku or Render) rely on the venue's often congested mobile networks (4G/5G). A local router guarantees millisecond-perfect Socket.io events, meaning players never miss a tap due to lag.
+- **No Internet Required:** Fests usually have terrible cell reception due to crowds. Since the server runs on your laptop and players connect via a local router, the entire game works perfectly completely offline!
+- **Zero Friction:** Users just connect to the open event WiFi, scan the projector's QR code, and instantly start playing—no downloading apps or wrestling with slow data connections.
+
 ## 🛠️ Tech Stack
 
 - **Backend:** Node.js, Express.js
