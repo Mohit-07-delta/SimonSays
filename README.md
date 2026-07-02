@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🎮 Simon Says Multiplayer</h1>
+  <h1>Simon Says Multiplayer</h1>
   <p>A real-time, massively multiplayer take on the classic memory game, built for college fests and large gatherings.</p>
 
   <p>
@@ -13,7 +13,7 @@
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 *(Replace these placeholders with actual screenshots of your game before presenting!)*
 
@@ -35,7 +35,7 @@
   <p><i>Left to Right: Player Controller, Spectator View, Host Dashboard</i></p>
 </div>
 
-## ✨ Features
+## Features
 
 - **Massively Multiplayer:** Supports 30+ simultaneous players connected via mobile devices.
 - **Dynamic QR Code:** Auto-detects local IP and generates a QR code on the Display & Host screens for instant, frictionless joining.
@@ -45,7 +45,7 @@
 - **Audio & Visual Polish:** Integrated sound effects for tapping, eliminations, and victories, alongside an HTML5 Canvas confetti celebration!
 - **Simulated Load Testing:** Comes with a built-in `simulate.js` script to instantly test the server with 30 AI bots.
 
-## ⚡ Why Run Locally (LAN) vs Cloud?
+## Why Run Locally (LAN) vs Cloud?
 
 This game was specifically engineered to be played on a local network (using a dedicated WiFi router without internet) for college fests and large events. Here's why:
 
@@ -53,14 +53,14 @@ This game was specifically engineered to be played on a local network (using a d
 - **No Internet Required:** Fests usually have terrible cell reception due to crowds. Since the server runs on your laptop and players connect via a local router, the entire game works perfectly completely offline!
 - **Zero Friction:** Users just connect to the open event WiFi, scan the projector's QR code, and instantly start playing—no downloading apps or wrestling with slow data connections.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Backend:** Node.js, Express.js
 - **Real-Time Communication:** Socket.io
 - **Frontend:** Vanilla HTML, CSS, JavaScript (No frameworks, lightweight for fast mobile loading)
 - **Utilities:** `qrcode` (for on-the-fly QR generation)
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) (v16 or higher)
@@ -85,7 +85,7 @@ This game was specifically engineered to be played on a local network (using a d
    npm start
    ```
 
-### 📱 How to Play (Event Setup)
+### How to Play (Event Setup)
 
 1. Connect the host laptop to your dedicated WiFi Router.
 2. Run `npm start`.
@@ -94,7 +94,7 @@ This game was specifically engineered to be played on a local network (using a d
 5. Ask players to connect to the WiFi Router on their phones, then scan the QR code shown on the projector.
 6. Once enough players join, the Host hits **Start Game**!
 
-## 🧪 Load Testing
+## Load Testing
 
 Want to test how the game handles a crowd before the actual event?
 Open a new terminal window and run:
@@ -105,22 +105,22 @@ node simulate.js
 
 This will automatically connect 30 bots to the server who will play the game intelligently (making occasional mistakes so you can test eliminations).
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
-📦 SimonSays
- ┣ 📂 public
- ┃ ┣ 📜 display.html / .css / .js   # Projector Screen
- ┃ ┣ 📜 host.html / .css / .js      # Host Dashboard
- ┃ ┣ 📜 player.html / .css / .js    # Mobile Controller
- ┃ ┗ 🎵 tap.mp3, win.mp3...         # Audio Assets (Add your own)
- ┣ 📜 server.js                     # Main Express & Socket.io Server
- ┣ 📜 simulate.js                   # Load testing bot script
- ┣ 📜 package.json
- ┗ 📜 README.md
+SimonSays
+ ┣ public/
+ ┃ ┣ display.html / .css / .js   # Projector Screen
+ ┃ ┣ host.html / .css / .js      # Host Dashboard
+ ┃ ┣ player.html / .css / .js    # Mobile Controller
+ ┃ ┗ tap.mp3, win.mp3...         # Audio Assets (Add your own)
+ ┣ server.js                     # Main Express & Socket.io Server
+ ┣ simulate.js                   # Load testing bot script
+ ┣ package.json
+ ┗ README.md
 ```
 
 ---
 <div align="center">
-  <p>Made with ❤️ for college fests and tech events.</p>
+  <p>Made for college fests and tech events.</p>
 </div>
