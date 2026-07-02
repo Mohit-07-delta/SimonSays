@@ -26,7 +26,7 @@ In **Simon Says Multiplayer**, players compete in a fast-paced memory challenge:
 
 <div align="center">
   <img src="assets/display.png" alt="Big Screen Display View" width="800" />
-  <p><i>The Big Screen Display (Projector View)</i></p>
+  <p><i> Display (Projector View)</i></p>
 </div>
 
 <br/>
@@ -34,14 +34,12 @@ In **Simon Says Multiplayer**, players compete in a fast-paced memory challenge:
 <div align="center">
   <img src="assets/lobby.png" alt="Lobby Screen" width="200" />
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="assets/mobile-player.png" alt="Mobile Player View" width="200" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="assets/mobile-spectator.png" alt="Mobile Spectator View" width="200" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  <p><i> Lobby Screen </i></p>
   <img src="assets/host-dashboard.png" alt="Host Dashboard" width="200" />
+  <p><i> Host-dashboard </i></p>
 </div>
 <div align="center">
-  <p><i>Left to Right: Lobby Screen, Player Controller, Spectator View, Host Dashboard</i></p>
+
 </div>
 
 ## Features
