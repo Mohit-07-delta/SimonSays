@@ -13,6 +13,14 @@
 
 ---
 
+## About the Game
+
+In **Simon Says Multiplayer**, players compete in a fast-paced memory challenge:
+1. **Watch the Screen:** The main projector displays a sequence of colors that flashes one by one. Each round, a new color is added to the sequence.
+2. **Memorize & Tap:** Once the sequence finishes playing, players have a limited time to replicate the exact sequence by tapping the color pads on their phones.
+3. **Survive or Spectate:** One wrong tap or failing to finish within the time limit results in instant elimination. Eliminated players are moved to a Spectator screen to watch the remaining players fight for the crown.
+4. **Last One Standing:** The rounds get progressively harder (longer sequences) until only one player survives to be crowned the ultimate champion!
+
 ## Screenshots
 
 *(Replace these placeholders with actual screenshots of your game before presenting!)*
