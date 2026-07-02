@@ -129,5 +129,5 @@ SimonSays
 
 ---
 <div align="center">
-  <p>Made for Wiki events.</p>
+  <p>Built for college fests, playable by 30 people at once.</p>
 </div>
