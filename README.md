@@ -41,6 +41,7 @@ In **Simon Says Multiplayer**, players compete in a fast-paced memory challenge:
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <b>Host Dashboard</b>
 </p>
+
 ## Features
 
 - **Massively Multiplayer:** Supports 30+ simultaneous players connected via mobile devices.
