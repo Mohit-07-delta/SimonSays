@@ -23,25 +23,24 @@ In **Simon Says Multiplayer**, players compete in a fast-paced memory challenge:
 
 ## Screenshots
 
-
 <div align="center">
-  <img src="assets/display.png" alt="Big Screen Display View" width="800" />
-  <p><i> Display (Projector View)</i></p>
+  <img src="assets/display.png" alt="Display" width="700"/>
+  <p><b>Display (Projector View)</b></p>
 </div>
 
-<br/>
+<br>
 
-<div align="center">
-  <img src="assets/lobby.png" alt="Lobby Screen" width="200" />
+<p align="center">
+  <img src="assets/lobby.png" alt="Lobby Screen" width="300"/>
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <p><i> Lobby Screen </i></p>
-  <img src="assets/host-dashboard.png" alt="Host Dashboard" width="200" />
-  <p><i> Host-dashboard </i></p>
-</div>
-<div align="center">
+  <img src="assets/host-dashboard.png" alt="Host Dashboard" width="300"/>
+</p>
 
-</div>
-
+<p align="center">
+  <b>Lobby Screen</b>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <b>Host Dashboard</b>
+</p>
 ## Features
 
 - **Massively Multiplayer:** Supports 30+ simultaneous players connected via mobile devices.
