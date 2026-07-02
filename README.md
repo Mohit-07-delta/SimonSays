@@ -130,5 +130,5 @@ SimonSays
 
 ---
 <div align="center">
-  <p>Made for college fests and tech events.</p>
+  <p>Made for Wiki events.</p>
 </div>
