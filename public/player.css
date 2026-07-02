@@ -1,0 +1,322 @@
+/* ── Reset & Base ──────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a12;
+  --surface: #14141f;
+  --text: #e8e8f0;
+  --text-dim: #6b6b80;
+  --red: #ff3b5c;
+  --red-glow: #ff3b5c88;
+  --blue: #3b8bff;
+  --blue-glow: #3b8bff88;
+  --green: #2ee89e;
+  --green-glow: #2ee89e88;
+  --yellow: #ffd642;
+  --yellow-glow: #ffd64288;
+  --radius: 20px;
+  --font: 'Outfit', system-ui, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* ── Screens ──────────────────────────────────────── */
+#app {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  animation: fadeUp 0.4s ease-out;
+}
+.screen.active { display: flex; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Join Screen ──────────────────────────────────── */
+.logo-glow h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, var(--red), var(--blue), var(--green), var(--yellow));
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 4s ease infinite;
+}
+.logo-glow h1 span { font-weight: 400; }
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+#join-form {
+  margin-top: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 320px;
+}
+
+#player-name {
+  font-family: var(--font);
+  font-size: 1.1rem;
+  padding: 14px 18px;
+  border: 2px solid #2a2a40;
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+#player-name:focus { border-color: var(--blue); }
+
+.btn-join {
+  font-family: var(--font);
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--blue), #6c5ce7);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn-join:active {
+  transform: scale(0.97);
+  box-shadow: 0 0 24px #6c5ce755;
+}
+
+.hint {
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* ── Game Screen ──────────────────────────────────── */
+#game-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+
+.status {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 6px 14px;
+  border-radius: 100px;
+}
+.status.alive {
+  background: rgba(46, 232, 158, 0.15);
+  color: var(--green);
+  box-shadow: 0 0 12px var(--green-glow);
+}
+.status.eliminated {
+  background: rgba(255, 59, 92, 0.15);
+  color: var(--red);
+}
+
+#round-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+/* ── 2×2 Color Buttons ────────────────────────────── */
+#button-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1;
+}
+
+.color-btn {
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.15s, filter 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.color-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.color-btn:active {
+  transform: scale(0.95);
+}
+
+/* Individual colors */
+#btn-red {
+  background: linear-gradient(145deg, #ff3b5c, #cc2244);
+  box-shadow: 0 4px 24px var(--red-glow), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+#btn-red:active, #btn-red.flash {
+  box-shadow: 0 0 48px var(--red), 0 0 80px var(--red-glow);
+  filter: brightness(1.3);
+}
+
+#btn-blue {
+  background: linear-gradient(145deg, #3b8bff, #2a5fcc);
+  box-shadow: 0 4px 24px var(--blue-glow), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+#btn-blue:active, #btn-blue.flash {
+  box-shadow: 0 0 48px var(--blue), 0 0 80px var(--blue-glow);
+  filter: brightness(1.3);
+}
+
+#btn-green {
+  background: linear-gradient(145deg, #2ee89e, #1faa72);
+  box-shadow: 0 4px 24px var(--green-glow), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+#btn-green:active, #btn-green.flash {
+  box-shadow: 0 0 48px var(--green), 0 0 80px var(--green-glow);
+  filter: brightness(1.3);
+}
+
+#btn-yellow {
+  background: linear-gradient(145deg, #ffd642, #ccaa22);
+  box-shadow: 0 4px 24px var(--yellow-glow), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+#btn-yellow:active, #btn-yellow.flash {
+  box-shadow: 0 0 48px var(--yellow), 0 0 80px var(--yellow-glow);
+  filter: brightness(1.3);
+}
+
+#instruction {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+/* ── Spectator Screen ────────────────────────────── */
+.eliminated-icon {
+  font-size: 4rem;
+  margin-bottom: 12px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+#spectator-screen h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--red);
+}
+
+.spectator-stats {
+  margin: 16px 0;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius);
+  color: var(--text-dim);
+}
+
+.spectator-stats p {
+  margin: 6px 0;
+}
+
+.highlight {
+  color: var(--white);
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.watching-msg {
+  color: var(--green);
+  font-weight: 600;
+  margin-top: 12px;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.12); }
+}
+
+/* ── Disabled state (during sequence playback) ────── */
+#button-grid.disabled .color-btn {
+  pointer-events: none;
+  filter: brightness(0.5);
+}
+
+/* ── Countdown Timer ──────────────────────────────── */
+.timer-container {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.timer-container.hidden { display: none; }
+
+.timer-bar {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--green);
+  transform-origin: left;
+  transition: background 0.3s;
+}
+.timer-bar.warning {
+  background: var(--red);
+  box-shadow: 0 0 12px var(--red-glow);
+}
+
+.timer-text {
+  font-size: 1.1rem;
+  font-weight: 800;
+  min-width: 36px;
+  text-align: right;
+  color: var(--green);
+  transition: color 0.3s;
+}
+.timer-text.warning {
+  color: var(--red);
+}
+
+/* ── Round survived feedback ──────────────────────── */
+.survived-flash {
+  animation: survivedPulse 0.6s ease-out;
+}
+@keyframes survivedPulse {
+  0%   { box-shadow: inset 0 0 0 0 rgba(46,232,158,0.4); }
+  50%  { box-shadow: inset 0 0 60px 20px rgba(46,232,158,0.15); }
+  100% { box-shadow: inset 0 0 0 0 rgba(46,232,158,0); }
+}

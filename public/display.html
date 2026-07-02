@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simon Says — Display</title>
+  <meta name="description" content="Simon Says big-screen display for projector view.">
+  <link rel="stylesheet" href="display.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Confetti canvas overlay -->
+  <canvas id="confetti" class="confetti-canvas"></canvas>
+
+  <div id="display-app">
+    <!-- Idle / waiting state -->
+    <div id="idle-view" class="view active">
+      <h1 class="title-glow">Simon<span>Says</span></h1>
+      <p class="subtitle">Scan the QR code to join!</p>
+      <div id="qr-placeholder" class="qr-box" style="border: none; background: transparent; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        <img id="qr-img" src="" alt="QR" style="display: none; width: 200px; height: 200px; border-radius: 12px; box-shadow: 0 0 20px rgba(46, 232, 158, 0.4);">
+        <div id="qr-url" style="font-size: 1.4rem; font-weight: 800; color: var(--green);"></div>
+      </div>
+      <div id="player-count-idle" class="player-counter">
+        <span id="count-idle">0</span> players joined
+      </div>
+    </div>
+
+    <!-- Active game state -->
+    <div id="game-view" class="view">
+      <header id="display-header">
+        <div class="round-badge">
+          <span class="label">Round</span>
+          <span id="round-number" class="value">1</span>
+        </div>
+        <div class="player-badge">
+          <span id="players-alive" class="value">0</span>
+          <span class="label">Players Alive</span>
+        </div>
+      </header>
+
+      <div id="sequence-area">
+        <div class="color-pad" data-color="red" id="pad-red"></div>
+        <div class="color-pad" data-color="blue" id="pad-blue"></div>
+        <div class="color-pad" data-color="green" id="pad-green"></div>
+        <div class="color-pad" data-color="yellow" id="pad-yellow"></div>
+      </div>
+
+      <!-- Round summary overlay (shown between rounds) -->
+      <div id="round-summary" class="round-summary hidden">
+        <p id="summary-eliminated" class="summary-eliminated"></p>
+        <p id="summary-remaining" class="summary-remaining"></p>
+      </div>
+
+      <p id="display-status" class="status-text">Waiting for host…</p>
+    </div>
+
+    <!-- Game over state -->
+    <div id="gameover-view" class="view">
+      <div class="trophy">🏆</div>
+      <h2>Game Over!</h2>
+      <p id="winner-name"></p>
+      <p id="winner-subtitle">Thanks for playing!</p>
+    </div>
+  </div>
+
+  <!-- Audio Effects -->
+  <audio id="sfx-win" src="win.mp3" preload="auto"></audio>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="display.js"></script>
+</body>
+</html>

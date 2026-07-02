@@ -1,0 +1,286 @@
+/* ── Reset & Base ──────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #06060e;
+  --surface: #10101c;
+  --text: #e8e8f0;
+  --text-dim: #555570;
+  --red: #ff3b5c;
+  --red-glow: #ff3b5c66;
+  --blue: #3b8bff;
+  --blue-glow: #3b8bff66;
+  --green: #2ee89e;
+  --green-glow: #2ee89e66;
+  --yellow: #ffd642;
+  --yellow-glow: #ffd64266;
+  --radius: 28px;
+  --font: 'Outfit', system-ui, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+}
+
+/* Subtle animated background grid */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(59,139,255,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(255,59,92,0.06) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Views ────────────────────────────────────────── */
+#display-app {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 48px;
+  animation: viewIn 0.5s ease-out;
+}
+.view.active { display: flex; }
+
+@keyframes viewIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Idle View ────────────────────────────────────── */
+.title-glow {
+  font-size: 5rem;
+  font-weight: 800;
+  letter-spacing: -2px;
+  background: linear-gradient(135deg, var(--red), var(--blue), var(--green), var(--yellow));
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 4s ease infinite;
+  text-shadow: none;
+}
+.title-glow span { font-weight: 400; }
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+.subtitle {
+  margin-top: 12px;
+  font-size: 1.5rem;
+  color: var(--text-dim);
+}
+
+.qr-box {
+  margin-top: 36px;
+  width: 200px;
+  height: 200px;
+  background: var(--surface);
+  border: 2px dashed #2a2a44;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: var(--text-dim);
+}
+
+.player-counter {
+  margin-top: 28px;
+  font-size: 1.2rem;
+  color: var(--text-dim);
+}
+.player-counter span {
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: var(--green);
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+/* ── Game View — Header ───────────────────────────── */
+#display-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 40px;
+}
+
+.round-badge, .player-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.round-badge .label, .player-badge .label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+}
+.round-badge .value {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--blue), #6c5ce7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.player-badge .value {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--green);
+}
+
+/* ── Sequence Area — 2×2 pads ─────────────────────── */
+#sequence-area {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 1;
+}
+
+.color-pad {
+  border-radius: var(--radius);
+  transition: transform 0.12s, box-shadow 0.2s, filter 0.2s;
+}
+
+#pad-red {
+  background: linear-gradient(145deg, #ff3b5c, #a82040);
+  box-shadow: 0 6px 30px var(--red-glow);
+}
+#pad-blue {
+  background: linear-gradient(145deg, #3b8bff, #204faa);
+  box-shadow: 0 6px 30px var(--blue-glow);
+}
+#pad-green {
+  background: linear-gradient(145deg, #2ee89e, #179060);
+  box-shadow: 0 6px 30px var(--green-glow);
+}
+#pad-yellow {
+  background: linear-gradient(145deg, #ffd642, #b89520);
+  box-shadow: 0 6px 30px var(--yellow-glow);
+}
+
+/* Flash animation class — applied during sequence playback */
+.color-pad.flash {
+  transform: scale(1.05);
+  filter: brightness(1.6);
+}
+#pad-red.flash    { box-shadow: 0 0 80px var(--red),   0 0 120px var(--red-glow); }
+#pad-blue.flash   { box-shadow: 0 0 80px var(--blue),  0 0 120px var(--blue-glow); }
+#pad-green.flash  { box-shadow: 0 0 80px var(--green), 0 0 120px var(--green-glow); }
+#pad-yellow.flash { box-shadow: 0 0 80px var(--yellow),0 0 120px var(--yellow-glow); }
+
+/* Dim state (between flashes) */
+.color-pad.dim {
+  filter: brightness(0.35);
+}
+
+.status-text {
+  margin-top: 32px;
+  font-size: 1.2rem;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+
+/* ── Round Summary Overlay ────────────────────────── */
+.round-summary {
+  text-align: center;
+  animation: summaryIn 0.5s ease-out;
+}
+.round-summary.hidden { display: none; }
+
+.summary-eliminated {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--red);
+  margin-bottom: 8px;
+}
+.summary-remaining {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--green);
+}
+
+@keyframes summaryIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Game Over View ───────────────────────────────── */
+.trophy {
+  font-size: 6rem;
+  animation: bounce 1.2s ease-in-out infinite;
+}
+
+#gameover-view h2 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-top: 12px;
+  background: linear-gradient(135deg, var(--yellow), #ff9500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+#winner-name {
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-top: 16px;
+  background: linear-gradient(135deg, #fff, var(--yellow));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+#winner-subtitle {
+  margin-top: 8px;
+  font-size: 1.2rem;
+  color: var(--text-dim);
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+
+/* ── Confetti Canvas ──────────────────────────────── */
+.confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.confetti-canvas.active {
+  opacity: 1;
+}

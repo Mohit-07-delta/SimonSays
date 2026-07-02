@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Simon Says — Play</title>
+  <meta name="description" content="Join the Simon Says multiplayer game on your phone!">
+  <link rel="stylesheet" href="player.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <!-- Join screen -->
+    <div id="join-screen" class="screen active">
+      <div class="logo-glow">
+        <h1>Simon<span>Says</span></h1>
+      </div>
+      <form id="join-form">
+        <input type="text" id="player-name" placeholder="Enter your name" maxlength="16" autocomplete="off" required>
+        <button type="submit" class="btn-join">Join Game</button>
+      </form>
+      <p class="hint">Waiting for host to start…</p>
+    </div>
+
+    <!-- Game screen -->
+    <div id="game-screen" class="screen">
+      <header id="game-header">
+        <span id="player-status" class="status alive">ALIVE</span>
+        <span id="round-label">Round —</span>
+      </header>
+
+      <div id="button-grid">
+        <button class="color-btn" data-color="red" id="btn-red" aria-label="Red"></button>
+        <button class="color-btn" data-color="blue" id="btn-blue" aria-label="Blue"></button>
+        <button class="color-btn" data-color="green" id="btn-green" aria-label="Green"></button>
+        <button class="color-btn" data-color="yellow" id="btn-yellow" aria-label="Yellow"></button>
+      </div>
+
+      <div id="timer-container" class="timer-container hidden">
+        <div id="timer-bar" class="timer-bar"></div>
+        <span id="timer-text" class="timer-text">10s</span>
+      </div>
+
+      <p id="instruction">Watch the display screen…</p>
+    </div>
+
+    <!-- Spectator screen -->
+    <div id="spectator-screen" class="screen">
+      <div class="eliminated-icon">💀</div>
+      <h2>Eliminated</h2>
+      <div class="spectator-stats">
+        <p>Survived until Round <span id="spectator-round" class="highlight"></span></p>
+        <p><span id="spectator-remaining" class="highlight"></span> players still alive</p>
+      </div>
+      <p class="watching-msg">Watching live — good game!</p>
+    </div>
+  </div>
+
+  <!-- Audio Effects -->
+  <audio id="sfx-tap" src="tap.mp3" preload="auto"></audio>
+  <audio id="sfx-eliminated" src="eliminated.mp3" preload="auto"></audio>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="player.js"></script>
+</body>
+</html>

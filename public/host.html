@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simon Says — Host Controls</title>
+  <meta name="description" content="Host control panel for Simon Says multiplayer game.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    /* ── Inline styles (host page is a simple control panel) ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a12;
+      --surface: #14141f;
+      --border: #2a2a40;
+      --text: #e8e8f0;
+      --text-dim: #6b6b80;
+      --green: #2ee89e;
+      --blue: #3b8bff;
+      --red: #ff3b5c;
+      --yellow: #ffd642;
+      --radius: 16px;
+      --font: 'Outfit', system-ui, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    #host-app {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    h1 span {
+      color: var(--text-dim);
+      font-weight: 400;
+    }
+
+    .qr-container {
+      text-align: center;
+      margin: 16px 0;
+      padding: 16px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .qr-container img {
+      width: 150px;
+      height: 150px;
+      border-radius: 8px;
+    }
+    .qr-url {
+      margin-top: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--green);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 24px 0;
+    }
+
+    /* Stats bar */
+    .stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-card .value {
+      font-size: 2rem;
+      font-weight: 800;
+    }
+    .stat-card .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+    .stat-card:nth-child(1) .value { color: var(--blue); }
+    .stat-card:nth-child(2) .value { color: var(--green); }
+    .stat-card:nth-child(3) .value { color: var(--yellow); }
+
+    /* Buttons */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .host-btn {
+      font-family: var(--font);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 16px;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: transform 0.12s, box-shadow 0.15s;
+      letter-spacing: 0.5px;
+    }
+    .host-btn:active { transform: scale(0.97); }
+
+    #btn-start {
+      background: linear-gradient(135deg, var(--green), #1faa72);
+      color: #0a0a12;
+      box-shadow: 0 4px 20px rgba(46, 232, 158, 0.3);
+    }
+    #btn-next-round {
+      background: linear-gradient(135deg, var(--blue), #6c5ce7);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(59, 139, 255, 0.3);
+    }
+    #btn-reset {
+      background: var(--surface);
+      color: var(--red);
+      border: 1px solid #3a1a22;
+    }
+    #btn-reset:active {
+      box-shadow: 0 0 20px rgba(255, 59, 92, 0.2);
+    }
+
+    /* Log area */
+    .log-section {
+      margin-top: 28px;
+    }
+    .log-section h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
+    #event-log {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      height: 180px;
+      overflow-y: auto;
+      font-size: 0.8rem;
+      font-family: 'Courier New', monospace;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div id="host-app">
+    <h1>Host <span>Controls</span></h1>
+
+    <div class="qr-container">
+      <img id="qr-img" src="" alt="QR Code" style="display: none;">
+      <div id="qr-url" class="qr-url">Waiting for server...</div>
+      <div style="font-size: 0.8rem; color: var(--text-dim); margin-top: 4px;">Scan to join</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div id="stat-round" class="value">—</div>
+        <div class="label">Round</div>
+      </div>
+      <div class="stat-card">
+        <div id="stat-alive" class="value">0</div>
+        <div class="label">Alive</div>
+      </div>
+      <div class="stat-card">
+        <div id="stat-total" class="value">0</div>
+        <div class="label">Joined</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="host-btn" id="btn-start">▶  Start Game</button>
+      <button class="host-btn" id="btn-next-round">⏭  Next Round</button>
+      <button class="host-btn" id="btn-reset">⟲  Force Reset</button>
+    </div>
+
+    <div class="log-section">
+      <h3>Event Log</h3>
+      <div id="event-log"></div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="host.js"></script>
+</body>
+</html>
