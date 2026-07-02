@@ -32,14 +32,16 @@ In **Simon Says Multiplayer**, players compete in a fast-paced memory challenge:
 <br/>
 
 <div align="center">
-  <img src="assets/mobile-player.png" alt="Mobile Player View" width="250" />
+  <img src="assets/lobby.png" alt="Lobby Screen" width="200" />
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="assets/mobile-spectator.png" alt="Mobile Spectator View" width="250" />
+  <img src="assets/mobile-player.png" alt="Mobile Player View" width="200" />
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="assets/host-dashboard.png" alt="Host Dashboard" width="250" />
+  <img src="assets/mobile-spectator.png" alt="Mobile Spectator View" width="200" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="assets/host-dashboard.png" alt="Host Dashboard" width="200" />
 </div>
 <div align="center">
-  <p><i>Left to Right: Player Controller, Spectator View, Host Dashboard</i></p>
+  <p><i>Left to Right: Lobby Screen, Player Controller, Spectator View, Host Dashboard</i></p>
 </div>
 
 ## Features
