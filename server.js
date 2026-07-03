@@ -32,7 +32,7 @@ function getLocalIp() {
 }
 
 const localIp = getLocalIp();
-const serverUrl = `http://${localIp}:${PORT}`;
+const serverUrl = process.env.PUBLIC_URL || `http://${localIp}:${PORT}`;
 let qrDataUrl = '';
 
 qrcode.toDataURL(serverUrl, { margin: 2, scale: 8 }, (err, url) => {
