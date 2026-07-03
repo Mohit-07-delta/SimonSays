@@ -215,7 +215,8 @@ socket.on('game:winner', (data) => {
         podiumItem.querySelector('.lb-name').textContent = player.name;
         podiumItem.querySelector('.lb-score').textContent = `${player.score} points`;
         const avatarCircle = podiumItem.querySelector('.avatar-circle');
-        avatarCircle.style.backgroundImage = `url('/avatars/${player.avatar || 'ironman'}.png')`;
+        const ext = player.avatar && player.avatar.includes('.') ? '' : '.jpg';
+        avatarCircle.style.backgroundImage = `url('/avatars/${player.avatar || 'ironman'}${ext}')`;
         avatarCircle.style.backgroundSize = 'cover';
         avatarCircle.style.backgroundPosition = 'center';
         podiumItem.style.visibility = 'visible';
@@ -228,7 +229,7 @@ socket.on('game:winner', (data) => {
       row.innerHTML = `
         <div class="row-rank">${rank}</div>
         <div class="row-name" style="display: flex; align-items: center; gap: 10px;">
-          <img src="/avatars/${player.avatar || 'ironman'}.png" style="width: 32px; height: 32px; border-radius: 50%;" onerror="this.style.display='none'">
+          <img src="/avatars/${player.avatar || 'ironman'}${player.avatar && player.avatar.includes('.') ? '' : '.jpg'}" style="width: 32px; height: 32px; border-radius: 50%;" onerror="this.style.display='none'">
           ${player.name}
         </div>
         <div class="row-score">${player.score} points</div>

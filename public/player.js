@@ -54,7 +54,8 @@ joinForm.addEventListener('submit', (e) => {
       myName = res.name;
       
       // Update UI with avatar
-      avatarDisplay.style.backgroundImage = `url('/avatars/${res.avatar}.png')`;
+      const ext = res.avatar && res.avatar.includes('.') ? '' : '.jpg';
+      avatarDisplay.style.backgroundImage = `url('/avatars/${res.avatar}${ext}')`;
       
       showScreen(gameScreen);
       disableButtons();
