@@ -195,6 +195,12 @@
     </div>
 
     <div class="controls">
+      <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+        <select id="difficulty-select" style="flex: 1; padding: 12px; border-radius: var(--radius); background: var(--surface); color: var(--text); border: 1px solid var(--border); font-family: var(--font); font-size: 1rem; cursor: pointer;">
+          <option value="normal">🟢 Normal Mode</option>
+          <option value="hard">🔴 Hard Mode</option>
+        </select>
+      </div>
       <button class="host-btn" id="btn-start">▶  Start Game</button>
       <button class="host-btn" id="btn-next-round">⏭  Next Round</button>
       <button class="host-btn" id="btn-reset">⟲  Force Reset</button>

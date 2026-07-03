@@ -6,6 +6,7 @@ const socket = io();
 const btnStart = document.getElementById('btn-start');
 const btnNextRound = document.getElementById('btn-next-round');
 const btnReset = document.getElementById('btn-reset');
+const difficultySelect = document.getElementById('difficulty-select');
 const eventLog = document.getElementById('event-log');
 const statRound = document.getElementById('stat-round');
 const statAlive = document.getElementById('stat-alive');
@@ -97,9 +98,10 @@ function setBtnEnabled(btn, enabled) {
 // Button handlers
 btnStart.addEventListener('click', () => {
   if (btnStart.disabled) return;
-  console.log('Host: Start Game');
-  log('▶ Start Game');
-  socket.emit('start-game');
+  const difficulty = difficultySelect.value;
+  console.log('Host: Start Game', difficulty);
+  log(`▶ Start Game (${difficulty})`);
+  socket.emit('start-game', difficulty);
 });
 
 btnNextRound.addEventListener('click', () => {

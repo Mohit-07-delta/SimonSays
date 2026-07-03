@@ -88,7 +88,7 @@ function resetAllPads() {
   });
 }
 
-function flashPad(color) {
+function flashPad(color, flashMs, gapMs) {
   return new Promise(resolve => {
     const pad = padMap[color];
     if (!pad) return resolve();
@@ -102,12 +102,12 @@ function flashPad(color) {
       pad.classList.remove('flash');
       pad.classList.add('dim');
       // Gap before next flash
-      setTimeout(resolve, GAP_MS);
-    }, FLASH_MS);
+      setTimeout(resolve, gapMs);
+    }, flashMs);
   });
 }
 
-async function playSequence(sequence) {
+async function playSequence(sequence, flashMs, gapMs) {
   displayStatus.textContent = 'Watch closely\u2026';
 
   // Dim all pads first
@@ -116,7 +116,7 @@ async function playSequence(sequence) {
 
   // Flash each color in order
   for (const color of sequence) {
-    await flashPad(color);
+    await flashPad(color, flashMs, gapMs);
   }
 
   // Restore pads to normal
@@ -135,7 +135,7 @@ socket.on('show-sequence', (data) => {
   // Hide any round summary from previous round
   roundSummary.classList.add('hidden');
   roundNumber.textContent = data.round;
-  playSequence(data.sequence);
+  playSequence(data.sequence, data.flashMs || FLASH_MS, data.gapMs || GAP_MS);
 });
 
 // ── Your-turn event (update status text) ──────────────
@@ -214,6 +214,10 @@ socket.on('game:winner', (data) => {
       if (podiumItem) {
         podiumItem.querySelector('.lb-name').textContent = player.name;
         podiumItem.querySelector('.lb-score').textContent = `${player.score} points`;
+        const avatarCircle = podiumItem.querySelector('.avatar-circle');
+        avatarCircle.style.backgroundImage = `url('/avatars/${player.avatar || 'ironman'}.png')`;
+        avatarCircle.style.backgroundSize = 'cover';
+        avatarCircle.style.backgroundPosition = 'center';
         podiumItem.style.visibility = 'visible';
       }
     } else {
@@ -223,7 +227,10 @@ socket.on('game:winner', (data) => {
       row.style.animationDelay = `${0.3 + (rank * 0.1)}s`;
       row.innerHTML = `
         <div class="row-rank">${rank}</div>
-        <div class="row-name">${player.name}</div>
+        <div class="row-name" style="display: flex; align-items: center; gap: 10px;">
+          <img src="/avatars/${player.avatar || 'ironman'}.png" style="width: 32px; height: 32px; border-radius: 50%;" onerror="this.style.display='none'">
+          ${player.name}
+        </div>
         <div class="row-score">${player.score} points</div>
       `;
       lbList.appendChild(row);

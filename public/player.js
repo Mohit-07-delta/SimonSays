@@ -12,6 +12,7 @@ const joinBtn = joinForm.querySelector('.btn-join');
 const hintEl = document.querySelector('.hint');
 const buttonGrid = document.getElementById('button-grid');
 const colorButtons = document.querySelectorAll('.color-btn');
+const avatarDisplay = document.getElementById('player-avatar-display');
 const instruction = document.getElementById('instruction');
 const roundLabel = document.getElementById('round-label');
 const playerStatus = document.getElementById('player-status');
@@ -40,14 +41,21 @@ function showScreen(screen) {
 joinForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const name = playerNameInput.value.trim();
+  const avatarRadio = document.querySelector('input[name="avatar"]:checked');
+  const avatar = avatarRadio ? avatarRadio.value : 'ironman';
+  
   if (!name) return;
 
   joinBtn.disabled = true;
   joinBtn.textContent = 'Joining…';
 
-  socket.emit('join', name, (res) => {
+  socket.emit('join', { name, avatar }, (res) => {
     if (res.ok) {
       myName = res.name;
+      
+      // Update UI with avatar
+      avatarDisplay.style.backgroundImage = `url('/avatars/${res.avatar}.png')`;
+      
       showScreen(gameScreen);
       disableButtons();
       instruction.textContent = 'You\'re in! Waiting for host to start…';

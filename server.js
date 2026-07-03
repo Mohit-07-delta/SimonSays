@@ -15,6 +15,12 @@ const PORT = process.env.PORT || 3000;
 const MIN_PLAYERS = 5; // minimum players before host can start
 const ROUND_TIMEOUT_MS = 10000; // 10 seconds for players to input
 
+// Difficulty Settings
+const DIFF_CONFIG = {
+  normal: { timeout: 10000, startFlash: 700, gap: 250, colorsPerRound: 1 },
+  hard:   { timeout: 5000, startFlash: 700, gap: 200, colorsPerRound: 2, flashDecay: 50, minFlash: 250 }
+};
+
 let roundTimer = null; // server-side timeout handle
 
 // ── Server Info & QR Code ───────────────────────────
@@ -48,21 +54,39 @@ const gameState = {
   round: 0,
   sequence: [],
   aliveAtRoundStart: 0, // snapshot for calculating eliminations
+  difficulty: 'normal'
 };
 
 // ── Round helpers ────────────────────────────────────
 function startNextRound() {
-  // Append a random color
-  const color = COLORS[Math.floor(Math.random() * COLORS.length)];
-  gameState.sequence.push(color);
-  gameState.round = gameState.sequence.length;
+  const diff = DIFF_CONFIG[gameState.difficulty] || DIFF_CONFIG.normal;
+  
+  // Add colors based on difficulty
+  for (let i = 0; i < diff.colorsPerRound; i++) {
+    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    gameState.sequence.push(color);
+  }
+  
+  gameState.round++; // Not strictly sequence length anymore
   gameState.phase = 'showing-sequence';
 
   console.log(`🔔 Round ${gameState.round}: sequence = [${gameState.sequence.join(', ')}]`);
 
+  // Calculate speed for this round
+  let flashMs = diff.startFlash;
+  let gapMs = diff.gap;
+  if (gameState.difficulty === 'hard') {
+    flashMs = Math.max(diff.minFlash, diff.startFlash - (gameState.round * diff.flashDecay));
+  }
+
   // Send sequence to display clients only
   io.emit('round-info', { round: gameState.round, alive: aliveCount(), total: playerCount() });
-  io.emit('show-sequence', { sequence: [...gameState.sequence], round: gameState.round });
+  io.emit('show-sequence', { 
+    sequence: [...gameState.sequence], 
+    round: gameState.round,
+    flashMs: flashMs,
+    gapMs: gapMs
+  });
 }
 
 // Helper: count of all joined players
@@ -94,7 +118,10 @@ function openInputPhase() {
     }
   }
 
-  console.log(`✅ Round ${gameState.round}: input open (${aliveCount()} alive, ${ROUND_TIMEOUT_MS / 1000}s)`);
+  const diff = DIFF_CONFIG[gameState.difficulty] || DIFF_CONFIG.normal;
+  const timeoutMs = diff.timeout;
+
+  console.log(`✅ Round ${gameState.round}: input open (${aliveCount()} alive, ${timeoutMs / 1000}s)`);
 
   // Snapshot alive count for round-end stats
   gameState.aliveAtRoundStart = aliveCount();
@@ -103,7 +130,7 @@ function openInputPhase() {
   io.emit('your-turn', {
     round: gameState.round,
     length: gameState.sequence.length,
-    timeout: ROUND_TIMEOUT_MS,
+    timeout: timeoutMs,
   });
 
   // Safety timeout — eliminate anyone who hasn't finished
@@ -118,7 +145,7 @@ function openInputPhase() {
       }
     }
     checkRoundComplete();
-  }, ROUND_TIMEOUT_MS);
+  }, timeoutMs);
 }
 
 function eliminatePlayer(socketId, reason) {
@@ -179,7 +206,7 @@ function checkRoundComplete() {
     }
 
     const leaderboard = Object.values(gameState.players)
-      .map(p => ({ name: p.name, score: p.highestRound || 0 }))
+      .map(p => ({ name: p.name, avatar: p.avatar, score: p.highestRound || 0 }))
       .sort((a, b) => b.score - a.score)
       .slice(0, 10);
 
@@ -215,10 +242,15 @@ io.on('connection', (socket) => {
   socket.emit('server-info', { url: serverUrl, qr: qrDataUrl });
 
   // ── Player joins ────────────────────────────────────
-  socket.on('join', (name, callback) => {
+  socket.on('join', (data, callback) => {
     if (gameState.phase !== 'lobby') {
       return callback({ ok: false, reason: 'Game already in progress' });
     }
+    
+    // Support backward compatibility (old client sending just a string)
+    const name = typeof data === 'string' ? data : data.name;
+    const avatar = typeof data === 'object' ? (data.avatar || 'avatar_1') : 'avatar_1';
+
     const safeName = String(name).trim().substring(0, 16);
     if (!safeName) {
       return callback({ ok: false, reason: 'Name is required' });
@@ -226,20 +258,22 @@ io.on('connection', (socket) => {
 
     gameState.players[socket.id] = {
       name: safeName,
+      avatar: avatar,
       alive: true,
       progress: 0,
       highestRound: 0
     };
 
     console.log(`🙋 ${safeName} joined (${playerCount()} players)`);
-    callback({ ok: true, name: safeName });
+    callback({ ok: true, name: safeName, avatar: avatar });
     broadcastLobby();
   });
 
   // ── Host: Start Game ────────────────────────────────
-  socket.on('start-game', () => {
+  socket.on('start-game', (difficulty) => {
     if (playerCount() < MIN_PLAYERS) return;
-    console.log('🚀 Game started/restarted by host');
+    gameState.difficulty = difficulty || 'normal';
+    console.log(`🚀 Game started by host (Difficulty: ${gameState.difficulty})`);
 
     // Reset game state but keep players connected
     gameState.round = 0;
