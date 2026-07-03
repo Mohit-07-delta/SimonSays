@@ -60,6 +60,22 @@ This game was specifically engineered to be played on a local network (using a d
 - **No Internet Required:** Fests usually have terrible cell reception due to crowds. Since the server runs on your laptop and players connect via a local router, the entire game works perfectly completely offline!
 - **Zero Friction:** Users just connect to the open event WiFi, scan the projector's QR code, and instantly start playing—no downloading apps or wrestling with slow data connections.
 
+## Deploying to the Cloud (Render)
+
+If you prefer to host the game on the public internet so players can join using their mobile data (4G/5G), deploying to **Render** is free and takes just 5 minutes:
+
+1. Create a free account on [Render](https://render.com) and connect your GitHub account.
+2. Click **New +** > **Web Service** and select this repository.
+3. Configure the service:
+   - **Environment:** Node
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+4. Click **Create Web Service**.
+5. **Important for QR Code:** Once deployed, go to the **Environment** tab of your Render service and add an Environment Variable:
+   - Key: `PUBLIC_URL`
+   - Value: `https://your-render-app-url.onrender.com` (Your actual Render URL)
+This ensures the QR code generated on the display screen points to the correct public link instead of the cloud's internal IP.
+
 ## Tech Stack
 
 - **Backend:** Node.js, Express.js
