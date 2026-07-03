@@ -63,6 +63,50 @@
       <p id="winner-name"></p>
       <p id="winner-subtitle">Thanks for playing!</p>
     </div>
+
+    <!-- Leaderboard state -->
+    <div id="leaderboard-view" class="view">
+      <h2 class="lb-title">Leaderboard</h2>
+      
+      <div class="podium-container">
+        <!-- 2nd Place -->
+        <div class="podium-item podium-second" id="lb-podium-2" style="visibility: hidden;">
+          <div class="avatar-circle">
+            <span class="rank-badge">2</span>
+          </div>
+          <div class="lb-name"></div>
+          <div class="lb-score"></div>
+        </div>
+        
+        <!-- 1st Place -->
+        <div class="podium-item podium-first" id="lb-podium-1" style="visibility: hidden;">
+          <div class="crown">👑</div>
+          <div class="avatar-circle">
+            <span class="rank-badge">1</span>
+          </div>
+          <div class="lb-name"></div>
+          <div class="lb-score"></div>
+        </div>
+        
+        <!-- 3rd Place -->
+        <div class="podium-item podium-third" id="lb-podium-3" style="visibility: hidden;">
+          <div class="avatar-circle">
+            <span class="rank-badge">3</span>
+          </div>
+          <div class="lb-name"></div>
+          <div class="lb-score"></div>
+        </div>
+      </div>
+
+      <div class="lb-list-header">
+        <span>Rank</span>
+        <span>Player</span>
+        <span>Rounds Survived</span>
+      </div>
+      <div class="lb-list-container" id="lb-list">
+        <!-- Ranks 4-10 will be injected here -->
+      </div>
+    </div>
   </div>
 
   <!-- Audio Effects -->

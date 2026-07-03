@@ -126,6 +126,7 @@ function eliminatePlayer(socketId, reason) {
   if (!player || !player.alive) return;
 
   player.alive = false;
+  player.highestRound = gameState.round - 1;
   console.log(`💀 ${player.name} eliminated (${reason}) — ${aliveCount()} alive`);
 
   const sock = io.sockets.sockets.get(socketId);
@@ -161,21 +162,29 @@ function checkRoundComplete() {
   if (survivorCount <= 1 || survivorCount === 0) {
     gameState.phase = 'game-over';
 
+    // Winners survive the current round
+    for (const p of alive) {
+      p.highestRound = gameState.round;
+    }
+
     let winners;
     if (survivorCount === 1) {
       winners = [alive[0].name];
     } else {
       // Everyone died in the same round → tie among last-round players
       const lastAlive = Object.values(gameState.players)
-        .filter(p => !p.alive)
-        .filter(p => true) // all are dead; tie among those who were alive at round start
-        .slice(-gameState.aliveAtRoundStart)
+        .filter(p => !p.alive && p.highestRound === gameState.round - 1)
         .map(p => p.name);
       winners = lastAlive.length > 0 ? lastAlive : ['Nobody'];
     }
 
+    const leaderboard = Object.values(gameState.players)
+      .map(p => ({ name: p.name, score: p.highestRound || 0 }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+
     console.log(`🏆 Game over! Winner(s): ${winners.join(', ')}`);
-    io.emit('game:winner', { winners, round: gameState.round });
+    io.emit('game:winner', { winners, round: gameState.round, leaderboard });
     return;
   }
 
@@ -219,6 +228,7 @@ io.on('connection', (socket) => {
       name: safeName,
       alive: true,
       progress: 0,
+      highestRound: 0
     };
 
     console.log(`🙋 ${safeName} joined (${playerCount()} players)`);
@@ -241,6 +251,7 @@ io.on('connection', (socket) => {
       p.alive = true;
       p.progress = 0;
       p.survived = false;
+      p.highestRound = 0;
     }
 
     // Tell clients to reset their UI to the active game state

@@ -11,6 +11,7 @@ const PAUSE_MS  = 500;  // pause before sequence starts
 const idleView = document.getElementById('idle-view');
 const gameView = document.getElementById('game-view');
 const gameoverView = document.getElementById('gameover-view');
+const leaderboardView = document.getElementById('leaderboard-view');
 const countIdle = document.getElementById('count-idle');
 const roundNumber = document.getElementById('round-number');
 const playersAlive = document.getElementById('players-alive');
@@ -21,6 +22,13 @@ const summaryEliminated = document.getElementById('summary-eliminated');
 const summaryRemaining = document.getElementById('summary-remaining');
 const winnerName = document.getElementById('winner-name');
 const winnerSubtitle = document.getElementById('winner-subtitle');
+
+const lbPodiums = {
+  1: document.getElementById('lb-podium-1'),
+  2: document.getElementById('lb-podium-2'),
+  3: document.getElementById('lb-podium-3')
+};
+const lbList = document.getElementById('lb-list');
 
 const sfxWin = document.getElementById('sfx-win');
 const confettiCanvas = document.getElementById('confetti');
@@ -192,18 +200,38 @@ function startConfetti() {
 
 // ── Game over — show winner ───────────────────────────
 socket.on('game:winner', (data) => {
-  const names = data.winners || [];
-  if (names.length === 1) {
-    winnerName.textContent = names[0];
-    winnerSubtitle.textContent = `Won in round ${data.round}!`;
-  } else if (names.length > 1) {
-    winnerName.textContent = 'It\'s a tie!';
-    winnerSubtitle.textContent = names.join(', ');
-  } else {
-    winnerName.textContent = 'Nobody survived!';
-    winnerSubtitle.textContent = 'Better luck next time.';
-  }
-  showView(gameoverView);
+  const lbData = data.leaderboard || [];
+
+  // Hide all podiums initially
+  [1, 2, 3].forEach(rank => lbPodiums[rank].style.visibility = 'hidden');
+  lbList.innerHTML = ''; // clear list
+
+  lbData.forEach((player, index) => {
+    const rank = index + 1;
+    if (rank <= 3) {
+      // Podium
+      const podiumItem = lbPodiums[rank];
+      if (podiumItem) {
+        podiumItem.querySelector('.lb-name').textContent = player.name;
+        podiumItem.querySelector('.lb-score').textContent = `${player.score} points`;
+        podiumItem.style.visibility = 'visible';
+      }
+    } else {
+      // List
+      const row = document.createElement('div');
+      row.className = 'lb-row';
+      row.style.animationDelay = `${0.3 + (rank * 0.1)}s`;
+      row.innerHTML = `
+        <div class="row-rank">${rank}</div>
+        <div class="row-name">${player.name}</div>
+        <div class="row-score">${player.score} points</div>
+      `;
+      lbList.appendChild(row);
+    }
+  });
+
+  // Switch straight to leaderboard view
+  showView(leaderboardView);
 
   // Audio & Visuals
   sfxWin.currentTime = 0;
