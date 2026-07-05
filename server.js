@@ -229,10 +229,23 @@ function checkRoundComplete() {
 // Serve static files from public/
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Basic Auth Middleware for Host & Display
+const basicAuth = (req, res, next) => {
+  const b64auth = (req.headers.authorization || '').split(' ')[1] || '';
+  const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':');
+
+  if (login === 'admin' && password === 'fest2026') {
+    return next();
+  }
+
+  res.set('WWW-Authenticate', 'Basic realm="401"');
+  res.status(401).send('Authentication required.');
+};
+
 // Routes for the three pages
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'player.html')));
-app.get('/display', (req, res) => res.sendFile(path.join(__dirname, 'public', 'display.html')));
-app.get('/host', (req, res) => res.sendFile(path.join(__dirname, 'public', 'host.html')));
+app.get('/display', basicAuth, (req, res) => res.sendFile(path.join(__dirname, 'protected', 'display.html')));
+app.get('/host', basicAuth, (req, res) => res.sendFile(path.join(__dirname, 'protected', 'host.html')));
 
 // Socket.io connection handling
 io.on('connection', (socket) => {
