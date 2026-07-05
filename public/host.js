@@ -14,12 +14,16 @@ const statTotal = document.getElementById('stat-total');
 const qrImg = document.getElementById('qr-img');
 const qrUrl = document.getElementById('qr-url');
 
-let minPlayers = 5;
+let minPlayers = 1;
 
-// Start button begins disabled
+// Start buttons begin disabled
 btnStart.disabled = true;
 btnStart.style.opacity = '0.4';
 btnStart.style.cursor = 'not-allowed';
+
+btnNextRound.disabled = true;
+btnNextRound.style.opacity = '0.4';
+btnNextRound.style.cursor = 'not-allowed';
 
 // ── Server Info ───────────────────────────────────────
 socket.on('server-info', (data) => {

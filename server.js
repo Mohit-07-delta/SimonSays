@@ -12,7 +12,7 @@ const io = new Server(server, {
 });
 
 const PORT = process.env.PORT || 3000;
-const MIN_PLAYERS = 5; // minimum players before host can start
+const MIN_PLAYERS = 1; // minimum players before host can start
 const ROUND_TIMEOUT_MS = 10000; // 10 seconds for players to input
 
 // Difficulty Settings
