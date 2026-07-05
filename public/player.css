@@ -161,19 +161,27 @@ html, body {
   border-radius: 50%;
   border: 2px solid var(--border);
   background: var(--surface);
-  transition: transform 0.2s, border-color 0.2s;
+  transition: transform 0.2s, border-color 0.2s, opacity 0.2s, box-shadow 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
   object-fit: cover;
+  opacity: 0.6;
+}
+
+.avatar-option:hover img,
+.avatar-option:hover .fallback-emoji {
+  opacity: 1;
 }
 
 .avatar-option input:checked + img,
 .avatar-option input:checked + .fallback-emoji {
-  border-color: var(--primary);
-  transform: scale(1.1);
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+  opacity: 1;
+  border-color: var(--green);
+  border-width: 3px;
+  transform: scale(1.2);
+  box-shadow: 0 0 20px var(--green-glow);
 }
 
 /* Header Avatar */
