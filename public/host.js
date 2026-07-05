@@ -2,6 +2,15 @@
 
 const socket = io();
 
+let hostToken = '';
+fetch('/api/host-token')
+  .then(res => res.json())
+  .then(data => {
+    hostToken = data.token;
+    console.log('Host token fetched securely.');
+  })
+  .catch(err => console.error('Failed to fetch host token', err));
+
 // DOM references
 const btnStart = document.getElementById('btn-start');
 const btnNextRound = document.getElementById('btn-next-round');
@@ -105,21 +114,21 @@ btnStart.addEventListener('click', () => {
   const difficulty = difficultySelect.value;
   console.log('Host: Start Game', difficulty);
   log(`▶ Start Game (${difficulty})`);
-  socket.emit('start-game', difficulty);
+  socket.emit('start-game', { difficulty, token: hostToken });
 });
 
 btnNextRound.addEventListener('click', () => {
   if (btnNextRound.disabled) return;
   console.log('Host: Next Round');
   log('⏭ Next Round');
-  socket.emit('next-round');
+  socket.emit('next-round', { token: hostToken });
 });
 
 btnReset.addEventListener('click', () => {
   if (!confirm('Are you sure you want to force reset the game? This will disconnect everyone.')) return;
   console.log('Host: Force Reset');
   log('\u27f2 Force Reset pressed');
-  socket.emit('force-reset');
+  socket.emit('force-reset', { token: hostToken });
 });
 
 // ── Force Reset ───────────────────────────────────────

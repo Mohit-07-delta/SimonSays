@@ -4,6 +4,7 @@ const { Server } = require('socket.io');
 const path = require('path');
 const os = require('os');
 const qrcode = require('qrcode');
+const crypto = require('crypto');
 
 const app = express();
 const server = http.createServer(app);
@@ -14,6 +15,9 @@ const io = new Server(server, {
 const PORT = process.env.PORT || 3000;
 const MIN_PLAYERS = 1; // minimum players before host can start
 const ROUND_TIMEOUT_MS = 10000; // 10 seconds for players to input
+
+// Generate a random token for the host
+const HOST_TOKEN = crypto.randomUUID();
 
 // Difficulty Settings
 const DIFF_CONFIG = {
@@ -247,6 +251,24 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'player.h
 app.get('/display', basicAuth, (req, res) => res.sendFile(path.join(__dirname, 'protected', 'display.html')));
 app.get('/host', basicAuth, (req, res) => res.sendFile(path.join(__dirname, 'protected', 'host.html')));
 
+// API Route for Host Token (Protected)
+app.get('/api/host-token', basicAuth, (req, res) => {
+  res.json({ token: HOST_TOKEN });
+});
+
+// Sanitizer utility
+const escapeHTML = (str) => {
+  return String(str).replace(/[&<>'"]/g, 
+    tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag])
+  );
+};
+
 // Socket.io connection handling
 io.on('connection', (socket) => {
   console.log(`[+] Client connected: ${socket.id}`);
@@ -283,9 +305,13 @@ io.on('connection', (socket) => {
   });
 
   // ── Host: Start Game ────────────────────────────────
-  socket.on('start-game', (difficulty) => {
+  socket.on('start-game', (data) => {
+    const diff = typeof data === 'string' ? data : (data && data.difficulty ? data.difficulty : 'normal');
+    const token = typeof data === 'object' ? data.token : null;
+    if (token !== HOST_TOKEN) return console.warn(`[!] Unauthorized start-game attempt from ${socket.id}`);
+    
     if (playerCount() < MIN_PLAYERS) return;
-    gameState.difficulty = difficulty || 'normal';
+    gameState.difficulty = diff;
     console.log(`🚀 Game started by host (Difficulty: ${gameState.difficulty})`);
 
     // Reset game state but keep players connected
@@ -308,7 +334,10 @@ io.on('connection', (socket) => {
   });
 
   // ── Host: Next Round ────────────────────────────────
-  socket.on('next-round', () => {
+  socket.on('next-round', (data) => {
+    const token = typeof data === 'object' ? data.token : null;
+    if (token !== HOST_TOKEN) return console.warn(`[!] Unauthorized next-round attempt from ${socket.id}`);
+
     if (gameState.phase === 'game-over') return;
     if (gameState.phase !== 'round-complete' && gameState.phase !== 'lobby') return;
     console.log('⏭ Host triggered next round');
@@ -316,7 +345,10 @@ io.on('connection', (socket) => {
   });
 
   // ── Host: Force Reset ───────────────────────────────
-  socket.on('force-reset', () => {
+  socket.on('force-reset', (data) => {
+    const token = typeof data === 'object' ? data.token : null;
+    if (token !== HOST_TOKEN) return console.warn(`[!] Unauthorized force-reset attempt from ${socket.id}`);
+
     console.log('🔄 Host triggered force reset');
     gameState.phase = 'lobby';
     gameState.players = {};
