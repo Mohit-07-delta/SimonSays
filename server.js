@@ -62,6 +62,23 @@ const gameState = {
 };
 
 // ── Round helpers ────────────────────────────────────
+function startCountdown() {
+  gameState.phase = 'countdown';
+  let count = 3;
+  io.emit('countdown', { count });
+  
+  const timer = setInterval(() => {
+    count--;
+    if (count > 0) {
+      io.emit('countdown', { count });
+    } else {
+      clearInterval(timer);
+      io.emit('countdown', { count: 'GO!' });
+      setTimeout(() => startNextRound(), 800);
+    }
+  }, 1000);
+}
+
 function startNextRound() {
   const diff = DIFF_CONFIG[gameState.difficulty] || DIFF_CONFIG.normal;
   
@@ -286,9 +303,15 @@ io.on('connection', (socket) => {
     const name = typeof data === 'string' ? data : data.name;
     const avatar = typeof data === 'object' ? (data.avatar || 'avatar_1') : 'avatar_1';
 
-    const safeName = String(name).trim().substring(0, 16);
+    const safeName = escapeHTML(String(name).trim().substring(0, 16));
     if (!safeName) {
       return callback({ ok: false, reason: 'Name is required' });
+    }
+
+    // Check for duplicate names
+    const isDuplicate = Object.values(gameState.players).some(p => p.name.toLowerCase() === safeName.toLowerCase());
+    if (isDuplicate) {
+      return callback({ ok: false, reason: 'This name is already taken. Please choose another!' });
     }
 
     gameState.players[socket.id] = {
@@ -330,7 +353,7 @@ io.on('connection', (socket) => {
     // Tell clients to reset their UI to the active game state
     io.emit('game-restarted');
 
-    startNextRound();
+    startCountdown();
   });
 
   // ── Host: Next Round ────────────────────────────────
@@ -341,7 +364,7 @@ io.on('connection', (socket) => {
     if (gameState.phase === 'game-over') return;
     if (gameState.phase !== 'round-complete' && gameState.phase !== 'lobby') return;
     console.log('⏭ Host triggered next round');
-    startNextRound();
+    startCountdown();
   });
 
   // ── Host: Force Reset ───────────────────────────────

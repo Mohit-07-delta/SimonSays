@@ -408,3 +408,37 @@ html, body {
   50%  { box-shadow: inset 0 0 60px 20px rgba(46,232,158,0.15); }
   100% { box-shadow: inset 0 0 0 0 rgba(46,232,158,0); }
 }
+
+/* ── OVERLAYS ───────────────────────────────────────── */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 1;
+  transition: opacity 0.4s;
+}
+
+.overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#countdown-text {
+  font-size: 8rem;
+  font-weight: 900;
+  color: var(--primary);
+  text-shadow: 0 0 40px rgba(139, 92, 246, 0.8);
+  animation: popScale 1s ease-in-out infinite;
+}
+
+@keyframes popScale {
+  0% { transform: scale(0.5); opacity: 0; }
+  20% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
+}

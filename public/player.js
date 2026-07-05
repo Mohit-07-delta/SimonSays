@@ -22,6 +22,9 @@ const timerText = document.getElementById('timer-text');
 const spectatorRound = document.getElementById('spectator-round');
 const spectatorRemaining = document.getElementById('spectator-remaining');
 
+const countdownOverlay = document.getElementById('countdown-overlay');
+const countdownText = document.getElementById('countdown-text');
+
 // Audio elements
 const sfxTap = document.getElementById('sfx-tap');
 const sfxEliminated = document.getElementById('sfx-eliminated');
@@ -228,6 +231,20 @@ socket.on('eliminated', (data) => {
   
   sfxEliminated.currentTime = 0;
   sfxEliminated.play().catch(() => {});
+});
+
+// ── Start game/sequence ───────────────────────────────
+socket.on('countdown', (data) => {
+  showScreen(gameScreen);
+  if (data.count === 'GO!' || data.count === 0) {
+    countdownText.textContent = 'GO!';
+    setTimeout(() => {
+      countdownOverlay.classList.add('hidden');
+    }, 800);
+  } else {
+    countdownOverlay.classList.remove('hidden');
+    countdownText.textContent = data.count;
+  }
 });
 
 // ── Game Restarted ────────────────────────────────────

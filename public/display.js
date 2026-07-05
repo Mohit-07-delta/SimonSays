@@ -20,6 +20,10 @@ const colorPads = document.querySelectorAll('.color-pad');
 const roundSummary = document.getElementById('round-summary');
 const summaryEliminated = document.getElementById('summary-eliminated');
 const summaryRemaining = document.getElementById('summary-remaining');
+const winOverlay = document.getElementById('win-overlay');
+const winNames = document.getElementById('win-names');
+const countdownOverlay = document.getElementById('countdown-overlay');
+const countdownText = document.getElementById('countdown-text');
 const winnerName = document.getElementById('winner-name');
 const winnerSubtitle = document.getElementById('winner-subtitle');
 
@@ -72,6 +76,23 @@ socket.on('lobby-update', (data) => {
 socket.on('round-info', (data) => {
   roundNumber.textContent = data.round;
   playersAlive.textContent = data.alive;
+});
+
+// ── Countdown ─────────────────────────────────────────
+socket.on('countdown', (data) => {
+  // Hide lobby and winner overlays
+  showView(gameView); 
+  winOverlay.classList.add('hidden');
+  
+  if (data.count === 'GO!' || data.count === 0) {
+    countdownText.textContent = 'GO!';
+    setTimeout(() => {
+      countdownOverlay.classList.add('hidden');
+    }, 800);
+  } else {
+    countdownOverlay.classList.remove('hidden');
+    countdownText.textContent = data.count;
+  }
 });
 
 // ── Sequence animation ────────────────────────────────
@@ -249,7 +270,10 @@ socket.on('game:winner', (data) => {
 
 // ── Game Restarted ────────────────────────────────────
 socket.on('game-restarted', () => {
-  showView(gameView);
+  console.log('Game restarted');
+  showView(idleView);
+  winOverlay.classList.add('hidden');
+  countdownOverlay.classList.add('hidden');
   roundSummary.classList.add('hidden');
   confettiCanvas.classList.remove('active');
 });
